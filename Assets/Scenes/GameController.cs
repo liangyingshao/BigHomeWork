@@ -73,7 +73,7 @@ public class GameController : MonoBehaviour
             if (Mathf.Abs(currentGemstone.rowIndex - c.rowIndex) + Mathf.Abs(currentGemstone.columIndex - c.columIndex) == 1) // 两颗宝石距离正确
             {
                 //ExangeAndMatches(currentGemstone,c);  
-                StartCoroutine(ExangeAndMatches(currentGemstone, c));
+                StartCoroutine(ExangeAndMatches(currentGemstone, c));//开启一个协程
             }
             else
             {
@@ -172,6 +172,8 @@ public class GameController : MonoBehaviour
         {
             Gemstone c = matchesGemstone[i] as Gemstone;
             RemoveGemstone(c);
+            //每删除一个宝石加1分
+            GameManager.score += 1;
         }
         matchesGemstone = new ArrayList();
         StartCoroutine(WaitForCheckMatchesAgain());
