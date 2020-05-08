@@ -7,7 +7,7 @@ public class Gemstone : MonoBehaviour
     public float yOffset = -2.0f; //y方向的偏移  
     public int rowIndex = 0;
     public int columIndex = 0;
-    public GameObject[] gemstoneBgs; //宝石数组  
+    public GameObject[] gemstoneBgs; //宝石预制体数组  
     public int gemstoneType; //宝石类型  
     private GameObject gemstoneBg;
     private GameController gameController;
