@@ -25,7 +25,6 @@ public class GameController : MonoBehaviour
             {
                 Gemstone c = AddGemstone(rowIndex, columIndex);
                 temp.Add(c);
-
             }
             gemstoneList.Add(temp);
         }
