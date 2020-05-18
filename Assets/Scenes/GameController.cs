@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public AnimationClip clear;//清除动画
     public Gemstone gemstone;
     public int rowNum = 7; //宝石列数  
     public int columNum = 10; //宝石行数  
@@ -170,9 +171,8 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < matchesGemstone.Count; i++)
         {
             Gemstone c = matchesGemstone[i] as Gemstone;
-            RemoveGemstone(c);
-            //每删除一个宝石加1分
-            GameManager.score += 1;
+            //调用清除动画
+            StartCoroutine(clearAnimation(c));
         }
         matchesGemstone = new ArrayList();
         StartCoroutine(WaitForCheckMatchesAgain());
@@ -197,7 +197,7 @@ public class GameController : MonoBehaviour
     /// <param name="c"></param>
     void RemoveGemstone(Gemstone c)
     {
-        //Debug.Log("删除宝石");  
+        //Debug.Log("删除宝石");
         c.Dispose();
         this.gameObject.GetComponent<AudioSource>().PlayOneShot(match3Clip);
         for (int i = c.rowIndex + 1; i < rowNum; i++)
@@ -213,6 +213,24 @@ public class GameController : MonoBehaviour
         SetGemstone(newGemstone.rowIndex, newGemstone.columIndex, newGemstone);
         newGemstone.UpdatePosition (newGemstone.rowIndex, newGemstone.columIndex);  
         //newGemstone.TweenToPostion(newGemstone.rowIndex, newGemstone.columIndex);
+    }
+
+    private IEnumerator clearAnimation(Gemstone c)
+    {
+        //播放清除动画
+        //settimeout
+        Debug.Log("scale: " + Time.timeScale);
+        Animator animator = c.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.Play(clear.name);
+            Debug.Log(c.name + "animator " + clear.name);
+            yield return new WaitForSeconds(clear.length);
+
+            RemoveGemstone(c);
+            //每删除一个宝石加1分
+            GameManager.score += 1;
+        }
     }
 
     /// <summary>

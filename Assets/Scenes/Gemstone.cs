@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Gemstone : MonoBehaviour
 {
-    public float xOffset = -4.5f; //x方向的偏移  
+    public float xOffset = -60f; //x方向的偏移  
     public float yOffset = -2.0f; //y方向的偏移  
     public int rowIndex = 0;
     public int columIndex = 0;
