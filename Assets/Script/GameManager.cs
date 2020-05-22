@@ -9,17 +9,18 @@ public class GameManager : MonoBehaviour
     //UI显示的内容
     public Text timeText;
     private float gameTime = 60;
-    private bool gameOver = false;
+    public static bool gameOver = false;
     public static int score = 0;
     private int currentScore = 0;
     private float addScoreTime = 0;
     public Text playerScore;
     public Button btn_back;
+    public GameObject panel;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        panel.SetActive(false);
     }
 
     //返回主面板
@@ -33,6 +34,8 @@ public class GameManager : MonoBehaviour
     {
         if(gameOver)
         {
+            //显示游戏结束面板（失败？失败动画？）
+            panel.SetActive(true);
             return;
         }
         gameTime -= Time.deltaTime;
@@ -40,8 +43,6 @@ public class GameManager : MonoBehaviour
         {
             gameTime = 0;
             gameOver = true;
-            //显示游戏结束面板（失败？失败动画？）
-            //如果游戏结束不允许继续操作
             return;
         }
         timeText.text = gameTime.ToString("0");
