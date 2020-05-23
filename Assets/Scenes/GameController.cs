@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -13,6 +14,16 @@ public class GameController : MonoBehaviour
     public AudioClip match3Clip;
     public AudioClip swapClip;
     public AudioClip erroeClip;
+    int[] array = new int[7];
+    public Text text0;
+    public Text text1;
+    public Text text2;
+    public Text text3;
+    public Text text4;
+    public Text text5;
+    public Text text6;
+    public Text txt_over;
+
 
     void Start()
     {
@@ -52,6 +63,19 @@ public class GameController : MonoBehaviour
     // Update is called once per frame  
     void Update()
     {
+        int count = 0;
+        for (int i = 0; i < 7; i++)
+        {
+            if (i == 2)
+                continue;
+            else if (array[i] >= 6)
+                count++;
+        }
+        if (count >= 5)
+        {
+            GameManager.gameOver = true;
+            txt_over.text = "下一关";
+        }
 
     }
 
@@ -62,7 +86,7 @@ public class GameController : MonoBehaviour
     public void Select(Gemstone c)
     {
         //Destroy (c.gameObject);
-        if (currentGemstone == null) // 没有选中任何宝石
+        if (currentGemstone == null || GameManager.gameOver) // 没有选中任何宝石
         {
             currentGemstone = c;
             currentGemstone.isSelected = true;
@@ -167,11 +191,12 @@ public class GameController : MonoBehaviour
     /// 删除匹配的宝石
     /// </summary>
     void RemoveMatches()
-    {  
+    {
         for (int i = 0; i < matchesGemstone.Count; i++)
         {
             Gemstone c = matchesGemstone[i] as Gemstone;
-            //调用清除动画
+            //调用清除动画以及清除宝石
+            //Debug.Log("0");
             StartCoroutine(clearAnimation(c));
         }
         matchesGemstone = new ArrayList();
@@ -184,7 +209,7 @@ public class GameController : MonoBehaviour
     /// <returns></returns>
     IEnumerator WaitForCheckMatchesAgain()
     { 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(clear.length);
         if (CheckHorizontalMatches() || CheckVerticalMatches())
         {
             RemoveMatches();
@@ -218,15 +243,24 @@ public class GameController : MonoBehaviour
     private IEnumerator clearAnimation(Gemstone c)
     {
         //播放清除动画
-        //settimeout
-        Debug.Log("scale: " + Time.timeScale);
         Animator animator = c.GetComponent<Animator>();
         if (animator != null)
         {
             animator.Play(clear.name);
-            Debug.Log(c.name + "animator " + clear.name);
+            //Debug.Log("1");
             yield return new WaitForSeconds(clear.length);
-
+            //Debug.Log("2");
+            switch (c.gemstoneType)
+            {
+                case 0: array[0]++; text0.text = (array[0]).ToString(); break;
+                case 1: array[1]++; text1.text = (array[1]).ToString();  break;
+                case 2: array[2]++; text2.text = (12 - array[2]).ToString(); break;
+                case 3: array[3]++; text3.text = (array[3]).ToString(); break;
+                case 4: array[4]++; text4.text = (array[4]).ToString(); break;
+                case 5: array[5]++; text5.text = (array[5]).ToString(); break;
+                case 6: array[6]++; text6.text = (array[6]).ToString(); break;
+                default:Debug.Log("??");break;
+            }
             RemoveGemstone(c);
             //每删除一个宝石加1分
             GameManager.score += 1;
