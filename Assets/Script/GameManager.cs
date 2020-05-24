@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public Text playerScore;
     public Button btn_back;
     public GameObject panel;
+    public Text txt_tip;
+    public GameObject img_tip;
 
     // Start is called before the first frame update
     void Start()
@@ -23,10 +25,39 @@ public class GameManager : MonoBehaviour
         panel.SetActive(false);
     }
 
-    //返回主面板
-    public void Onclick()
+    /// <summary>
+    /// 回到主菜单
+    /// </summary>
+    public void ToMenu()
     {
         SceneManager.LoadScene("Main");
+    }
+
+    /// <summary>
+    /// 重新开始游戏
+    /// </summary>
+    public void ReStartGame()
+    {
+        SceneManager.LoadScene("Scene1");
+    }
+
+    public void ChangeGameSpeed(float targetSpeed)
+    {
+        Time.timeScale = targetSpeed;
+    }
+
+    public void ShowTip()
+    {
+        if (txt_tip.text.Length == 0)
+        {
+            txt_tip.text = "生存是文明的第一要义：收集五个不同星球的图标各6个，每消去一个地球生命值减一，生命值为零则游戏失败。";
+            img_tip.SetActive(true);
+        }
+        else
+        {
+            txt_tip.text = "";
+            img_tip.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -52,7 +83,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if(currentScore<score)
+            if (currentScore < score)
             {
                 currentScore++;
                 playerScore.text = currentScore.ToString();
