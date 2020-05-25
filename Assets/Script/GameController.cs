@@ -54,7 +54,7 @@ public class GameController : MonoBehaviour
         Gemstone stone = Instantiate(gemstone) as Gemstone;
         stone.transform.parent = transform; // 生成宝石为GameController子物体  
         stone.GetComponent<Gemstone>().RandomCreateGemstoneBg();
-        stone.GetComponent<Gemstone>().UpdatePosition(rowIndex, columIndex);
+        stone.GetComponent<Gemstone>().UpdatePosiImmi(rowIndex, columIndex);
         return stone;
     }
 

@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Gemstone : MonoBehaviour
 {
-    public float xOffset = -60f; //x方向的偏移  
-    public float yOffset = -2.0f; //y方向的偏移  
+    public float xOffset; //x方向的偏移  
+    public float yOffset; //y方向的偏移  
     public int rowIndex = 0;
     public int columIndex = 0;
     public GameObject[] gemstoneBgs; //宝石预制体数组  
@@ -35,6 +35,13 @@ public class Gemstone : MonoBehaviour
     { 
         rowIndex = _rowIndex;
         columIndex = _columIndex;
+    }
+
+    public void UpdatePosiImmi(int _rowIndex, int _columIndex)
+    {
+        rowIndex = _rowIndex;
+        columIndex = _columIndex;
+        transform.position = new Vector2(columIndex + xOffset, rowIndex + yOffset);
     }
 
     /// <summary>

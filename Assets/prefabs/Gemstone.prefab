@@ -107,6 +107,7 @@ MonoBehaviour:
   - {fileID: 2329638490304323276, guid: 3938de90a4d91e24da0d134f3e87e523, type: 3}
   - {fileID: 1449898705195523796, guid: 2554fa74e96842e44bd97e341ec96a93, type: 3}
   gemstoneType: 0
+  isSelected: 0
 --- !u!65 &5681199777682323961
 BoxCollider:
   m_ObjectHideFlags: 0
