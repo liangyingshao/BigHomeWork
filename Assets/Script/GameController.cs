@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
     public Text txt_over;
 
 
-    void Start()
+    internal void Start()
     {
         /* 初始化游戏，生成宝石 */
         gemstoneList = new ArrayList(); 
@@ -40,7 +40,6 @@ public class GameController : MonoBehaviour
             }
             gemstoneList.Add(temp);
         }
-
         // 开始检测匹配消除 
         if (CheckHorizontalMatches() || CheckVerticalMatches()) RemoveMatches();
     }
