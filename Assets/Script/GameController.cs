@@ -262,8 +262,8 @@ public class GameController : MonoBehaviour
                 default:Debug.Log("??");break;
             }
             RemoveGemstone(c);
-            //每删除一个宝石加1分
-            GameManager.score += 1;
+            //每删除一个宝石加10分
+            GameManager.score += 10;
         }
     }
 
