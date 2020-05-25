@@ -15,19 +15,15 @@ public class GameController : MonoBehaviour
     public AudioClip swapClip;
     public AudioClip errorClip;
     int[] array = new int[7];
-    public Text text0;
-    public Text text1;
-    public Text text2;
-    public Text text3;
-    public Text text4;
-    public Text text5;
-    public Text text6;
     public Text txt_over;
+    private Text[] scoreText;
 
     internal void Start()
     {
+        scoreText = GameObject.Find("txt_score_detail").GetComponentsInChildren<Text>();
+
         /* 初始化游戏，生成宝石 */
-        gemstoneList = new ArrayList(); 
+        gemstoneList = new ArrayList();
         matchesGemstone = new ArrayList();
         for (int rowIndex = 0; rowIndex < rowNum; rowIndex++)
         {
@@ -50,9 +46,8 @@ public class GameController : MonoBehaviour
     /// <param name="columIndex">列位置</param>
     /// <returns></returns>
     public Gemstone AddGemstone(int rowIndex, int columIndex)
-    { 
-        Gemstone stone = Instantiate(gemstone) as Gemstone;
-        stone.transform.parent = transform; // 生成宝石为GameController子物体  
+    {
+        Gemstone stone = Instantiate(gemstone, transform) as Gemstone;// 生成宝石作为GameController子物体
         stone.GetComponent<Gemstone>().RandomCreateGemstoneBg();
         stone.GetComponent<Gemstone>().UpdatePosiImmi(rowIndex, columIndex);
         return stone;
@@ -71,7 +66,7 @@ public class GameController : MonoBehaviour
         }
         if (count >= 5)
         {
-            gameObject.GetComponent<GameManager>().MakeGameOver();;
+            gameObject.GetComponent<GameManager>().MakeGameOver(); ;
             txt_over.text = "下一关";
         }
     }
@@ -129,13 +124,13 @@ public class GameController : MonoBehaviour
     /// </summary>
     /// <returns>是否匹配</returns>
     bool CheckHorizontalMatches()
-    { 
+    {
         bool isMatches = false;
         for (int rowIndex = 0; rowIndex < rowNum; rowIndex++)
         {
             for (int columIndex = 0; columIndex < columNum - 2; columIndex++)
             {
-                if ((GetGemstone(rowIndex, columIndex).gemstoneType == GetGemstone(rowIndex, columIndex + 1).gemstoneType) 
+                if ((GetGemstone(rowIndex, columIndex).gemstoneType == GetGemstone(rowIndex, columIndex + 1).gemstoneType)
                     && (GetGemstone(rowIndex, columIndex).gemstoneType == GetGemstone(rowIndex, columIndex + 2).gemstoneType))
                 {
                     //Debug.Log ("发现行相同的宝石");  
@@ -203,7 +198,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     IEnumerator WaitForCheckMatchesAgain()
-    { 
+    {
         yield return new WaitForSeconds(clear.length);
         if (CheckHorizontalMatches() || CheckVerticalMatches())
         {
@@ -224,12 +219,12 @@ public class GameController : MonoBehaviour
             Gemstone temGemstone = GetGemstone(i, c.columIndex);
             temGemstone.rowIndex--;
             SetGemstone(temGemstone.rowIndex, temGemstone.columIndex, temGemstone);
-            temGemstone.UpdatePosition(temGemstone.rowIndex,temGemstone.columIndex);
+            temGemstone.UpdatePosition(temGemstone.rowIndex, temGemstone.columIndex);
         }
         Gemstone newGemstone = AddGemstone(rowNum, c.columIndex);
         newGemstone.rowIndex--;
         SetGemstone(newGemstone.rowIndex, newGemstone.columIndex, newGemstone);
-        newGemstone.UpdatePosition (newGemstone.rowIndex, newGemstone.columIndex);
+        newGemstone.UpdatePosition(newGemstone.rowIndex, newGemstone.columIndex);
     }
 
     private IEnumerator ClearWithAnimation(Gemstone c)
@@ -241,18 +236,18 @@ public class GameController : MonoBehaviour
             animator.Play(clear.name);
             //Debug.Log("1");
             yield return new WaitForSeconds(clear.length);
-            //Debug.Log("2");
-            switch (c.gemstoneType)
+
+            int type = c.gemstoneType;
+            ++array[type];
+            if (type == 0)
             {
-                case 0: array[0]++; text0.text = (array[0]).ToString(); break;
-                case 1: array[1]++; text1.text = (array[1]).ToString();  break;
-                case 2: array[2]++; text2.text = (12 - array[2]).ToString(); break;
-                case 3: array[3]++; text3.text = (array[3]).ToString(); break;
-                case 4: array[4]++; text4.text = (array[4]).ToString(); break;
-                case 5: array[5]++; text5.text = (array[5]).ToString(); break;
-                case 6: array[6]++; text6.text = (array[6]).ToString(); break;
-                default:Debug.Log("??");break;
+                scoreText[0].text = (12 - array[0]).ToString();
             }
+            else
+            {
+                scoreText[type].text = array[type].ToString();
+            }
+            
             RemoveGemstone(c);
             //每删除一个宝石加10分
             GameManager.score += 10;
@@ -299,8 +294,8 @@ public class GameController : MonoBehaviour
         c1.columIndex = c2.columIndex;
         c2.columIndex = tempColumIndex;
 
-        c1.UpdatePosition (c1.rowIndex, c1.columIndex);  
-        c2.UpdatePosition (c2.rowIndex, c2.columIndex);  
+        c1.UpdatePosition(c1.rowIndex, c1.columIndex);
+        c2.UpdatePosition(c2.rowIndex, c2.columIndex);
         //c1.TweenToPostion(c1.rowIndex, c1.columIndex);
         //c2.TweenToPostion(c2.rowIndex, c2.columIndex);
     }

@@ -51,8 +51,7 @@ public class Gemstone : MonoBehaviour
     { 
         if (gemstoneBg != null)return;
         gemstoneType = Random.Range(0, gemstoneBgs.Length);
-        gemstoneBg = Instantiate(gemstoneBgs[gemstoneType]) as GameObject;
-        gemstoneBg.transform.parent = this.transform;
+        gemstoneBg = Instantiate(gemstoneBgs[gemstoneType], transform) as GameObject;
     }
 
     public void OnMouseDown()
