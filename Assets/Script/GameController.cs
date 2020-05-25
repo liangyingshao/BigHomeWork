@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
     private ArrayList matchesGemstone;
     public AudioClip match3Clip;
     public AudioClip swapClip;
-    public AudioClip erroeClip;
+    public AudioClip errorClip;
     int[] array = new int[7];
     public Text text0;
     public Text text1;
@@ -23,7 +23,6 @@ public class GameController : MonoBehaviour
     public Text text5;
     public Text text6;
     public Text txt_over;
-
 
     internal void Start()
     {
@@ -47,20 +46,20 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// 生成宝石
     /// </summary>
-    /// <param name="rowIndex"></param>
-    /// <param name="columIndex"></param>
+    /// <param name="rowIndex">行位置</param>
+    /// <param name="columIndex">列位置</param>
     /// <returns></returns>
     public Gemstone AddGemstone(int rowIndex, int columIndex)
     { 
-        Gemstone c = Instantiate(gemstone) as Gemstone;
-        c.transform.parent = this.transform; // 生成宝石为GameController子物体  
-        c.GetComponent<Gemstone>().RandomCreateGemstoneBg();
-        c.GetComponent<Gemstone>().UpdatePosition(rowIndex, columIndex);
-        return c;
+        Gemstone stone = Instantiate(gemstone) as Gemstone;
+        stone.transform.parent = transform; // 生成宝石为GameController子物体  
+        stone.GetComponent<Gemstone>().RandomCreateGemstoneBg();
+        stone.GetComponent<Gemstone>().UpdatePosition(rowIndex, columIndex);
+        return stone;
     }
 
     // Update is called once per frame  
-    void Update()
+    internal void Update()
     {
         int count = 0;
         for (int i = 0; i < 7; i++)
@@ -72,10 +71,9 @@ public class GameController : MonoBehaviour
         }
         if (count >= 5)
         {
-            GameManager.gameOver = true;
+            gameObject.GetComponent<GameManager>().MakeGameOver();;
             txt_over.text = "下一关";
         }
-
     }
 
     /// <summary>
@@ -84,8 +82,7 @@ public class GameController : MonoBehaviour
     /// <param name="c"></param>
     public void Select(Gemstone c)
     {
-        //Destroy (c.gameObject);
-        if (currentGemstone == null || GameManager.gameOver) // 没有选中任何宝石
+        if (currentGemstone == null) // 没有选中任何宝石
         {
             currentGemstone = c;
             currentGemstone.isSelected = true;
@@ -100,7 +97,7 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                this.gameObject.GetComponent<AudioSource>().PlayOneShot(erroeClip);
+                gameObject.GetComponent<AudioSource>().PlayOneShot(errorClip);
             }
             currentGemstone.isSelected = false;
             currentGemstone = null;
@@ -195,8 +192,7 @@ public class GameController : MonoBehaviour
         {
             Gemstone c = matchesGemstone[i] as Gemstone;
             //调用清除动画以及清除宝石
-            //Debug.Log("0");
-            StartCoroutine(clearAnimation(c));
+            StartCoroutine(ClearWithAnimation(c));
         }
         matchesGemstone = new ArrayList();
         StartCoroutine(WaitForCheckMatchesAgain());
@@ -218,28 +214,25 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// 删除宝石
     /// </summary>
-    /// <param name="c"></param>
+    /// <param name="c">要删除的宝石</param>
     void RemoveGemstone(Gemstone c)
     {
-        //Debug.Log("删除宝石");
         c.Dispose();
-        this.gameObject.GetComponent<AudioSource>().PlayOneShot(match3Clip);
+        gameObject.GetComponent<AudioSource>().PlayOneShot(match3Clip);
         for (int i = c.rowIndex + 1; i < rowNum; i++)
         {
             Gemstone temGemstone = GetGemstone(i, c.columIndex);
             temGemstone.rowIndex--;
             SetGemstone(temGemstone.rowIndex, temGemstone.columIndex, temGemstone);
-            temGemstone.UpdatePosition(temGemstone.rowIndex,temGemstone.columIndex);  
-            //temGemstone.TweenToPostion(temGemstone.rowIndex, temGemstone.columIndex);
+            temGemstone.UpdatePosition(temGemstone.rowIndex,temGemstone.columIndex);
         }
         Gemstone newGemstone = AddGemstone(rowNum, c.columIndex);
         newGemstone.rowIndex--;
         SetGemstone(newGemstone.rowIndex, newGemstone.columIndex, newGemstone);
-        newGemstone.UpdatePosition (newGemstone.rowIndex, newGemstone.columIndex);  
-        //newGemstone.TweenToPostion(newGemstone.rowIndex, newGemstone.columIndex);
+        newGemstone.UpdatePosition (newGemstone.rowIndex, newGemstone.columIndex);
     }
 
-    private IEnumerator clearAnimation(Gemstone c)
+    private IEnumerator ClearWithAnimation(Gemstone c)
     {
         //播放清除动画
         Animator animator = c.GetComponent<Animator>();

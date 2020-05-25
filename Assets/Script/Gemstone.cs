@@ -11,32 +11,19 @@ public class Gemstone : MonoBehaviour
     public int gemstoneType; //宝石类型  
     private GameObject gemstoneBg;
     private GameController gameController;
-    private SpriteRenderer spriteRenderer;
-    public bool isSelected
-    {
-        set
-        {
-            if (value)
-            {
-                spriteRenderer.color = Color.red;
-            }
-            else
-            {
-                spriteRenderer.color = Color.white;
-            }
-        }
-    }
+    //private SpriteRenderer spriteRenderer;
+    public bool isSelected;
     // Use this for initialization  
-    void Start()
+    internal void Start()
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
-        spriteRenderer = gemstoneBg.GetComponent<SpriteRenderer>();
+        //spriteRenderer = gemstoneBg.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame  
-    void Update()
+    internal void Update()
     {
-
+        transform.position = Vector2.Lerp(transform.position, new Vector2(columIndex + xOffset, rowIndex + yOffset), 0.1F);
     }
 
     /// <summary>
@@ -48,20 +35,7 @@ public class Gemstone : MonoBehaviour
     { 
         rowIndex = _rowIndex;
         columIndex = _columIndex;
-        this.transform.position = new Vector3(columIndex + xOffset, rowIndex + yOffset, 0);
     }
-
-    /// <summary>
-    /// 调用iTween插件实现宝石滑动效果  
-    /// </summary>
-    /// <param name="_rowIndex"></param>
-    /// <param name="_columIndex"></param>
-    /*public void TweenToPostion(int _rowIndex, int _columIndex)
-    { 
-        rowIndex = _rowIndex;
-        columIndex = _columIndex;
-        iTween.MoveTo(this.gameObject, iTween.Hash("x", columIndex + xOffset, "y", rowIndex + yOffset, "time", 0.5f));
-    }*/
 
     /// <summary>
     /// 生成随机宝石类型
@@ -81,8 +55,8 @@ public class Gemstone : MonoBehaviour
 
     public void Dispose()
     {
-        Destroy(this.gameObject);
-        Destroy(gemstoneBg.gameObject);
         gameController = null;
+        Destroy(gameObject);
+        Destroy(gemstoneBg.gameObject);
     }
 }
