@@ -234,7 +234,6 @@ public class GameController : MonoBehaviour
         if (animator != null)
         {
             animator.Play(clear.name);
-            //Debug.Log("1");
             yield return new WaitForSeconds(clear.length);
 
             int type = c.gemstoneType;
