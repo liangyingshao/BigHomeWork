@@ -99,14 +99,15 @@ MonoBehaviour:
   rowIndex: 0
   columIndex: 0
   gemstoneBgs:
+  - {fileID: 7168482740453112307, guid: 561e9ffcf94d10b48a47c9684cc20e2e, type: 3}
   - {fileID: 3559412322956480076, guid: 006a3d6f39f26fb499eee0561cd24393, type: 3}
   - {fileID: 8451330007414900667, guid: 4f45a5180a34df74d91f5cd8ad4f535c, type: 3}
-  - {fileID: 7168482740453112307, guid: 561e9ffcf94d10b48a47c9684cc20e2e, type: 3}
   - {fileID: 8913805295690332162, guid: fa0b5ea80d462dc418ce806c4b494191, type: 3}
   - {fileID: 4658964822895427003, guid: e3177b7b0d9e85d49a034e91a65ecd9e, type: 3}
   - {fileID: 2329638490304323276, guid: 3938de90a4d91e24da0d134f3e87e523, type: 3}
   - {fileID: 1449898705195523796, guid: 2554fa74e96842e44bd97e341ec96a93, type: 3}
   gemstoneType: 0
+  isSelected: 0
 --- !u!65 &5681199777682323961
 BoxCollider:
   m_ObjectHideFlags: 0
