@@ -8,21 +8,35 @@ public class GameManager : MonoBehaviour
 {
     //UI显示的内容
     public Text timeText;
-    private float gameTime = 60;
-    public bool gameOver = false;
-    public static int score = 0;
-    private int currentScore = 0;
-    private float addScoreTime = 0;
+    private float gameTime;
+    public static bool success;
+    public static bool newStart = false;
+    public static int score;
+    private int currentScore;
+    private float addScoreTime;
     public Text playerScore;
     public Button btn_back;
     public GameObject panel;
     public Text txt_tip;
     public GameObject img_tip;
+    static public int level = 0;
+
+    void initGameManager()
+    {
+        gameTime = 60;
+        score = 0;
+        success = false;
+        //newStart = false;
+        score = 0;
+        currentScore = 0;
+        addScoreTime = 0;
+    }
 
     // Start is called before the first frame update
     internal void Start()
     {
         panel.SetActive(false);
+        initGameManager();
     }
 
     /// <summary>
@@ -40,6 +54,18 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Scene1");
     }
+    
+    public void buttonOverFunc()
+    {
+        if (success)
+        {
+            level++;
+        }
+        newStart = true;
+        initGameManager();
+        //System.Threading.Thread.Sleep(1000);
+        panel.SetActive(false);
+    }
 
     public void ChangeGameSpeed(float targetSpeed)
     {
@@ -50,7 +76,16 @@ public class GameManager : MonoBehaviour
     {
         if (txt_tip.text.Length == 0)
         {
-            txt_tip.text = "生存是文明的第一要义：收集五个不同星球的图标各6个，每消去一个地球生命值减一，生命值为零则游戏失败。";
+            switch(level)
+            {
+                case 0:
+                    txt_tip.text = "level 1\n生存是文明的第一要义：收集五个不同星球的图标各6个，每消去一个地球生命值减一，生命值为零则游戏失败。";break;
+                case 1:
+                    txt_tip.text = "level 2\n黑暗森林法则：在60秒内消尽可能多的星球，分数达到500即可通关，每消去一个地球生命值减一，生命值为零则游戏失败。"; break;
+                default:
+                    break;
+            }
+            
             img_tip.SetActive(true);
         }
         else
@@ -63,6 +98,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     internal void Update()
     {
+        if (panel.activeSelf)
+        {
+            return;
+        }
         gameTime -= Time.deltaTime;
         if(gameTime<=0)
         {
@@ -79,7 +118,7 @@ public class GameManager : MonoBehaviour
         {
             if (currentScore < score)
             {
-                currentScore++;
+                currentScore+=10;
                 playerScore.text = currentScore.ToString();
                 addScoreTime = 0;
             }

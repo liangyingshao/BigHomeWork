@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    public const int LIFE_LENGTH=6;
     public AnimationClip clear;//清除动画
     public Gemstone gemstone;
     public int rowNum = 7; //宝石列数  
@@ -14,17 +15,40 @@ public class GameController : MonoBehaviour
     public AudioClip match3Clip;
     public AudioClip swapClip;
     public AudioClip errorClip;
-    int[] array = new int[7];
+    int[] array;
     public Text txt_over;
     private Text[] scoreText;
 
     internal void Start()
     {
         scoreText = GameObject.Find("txt_score_detail").GetComponentsInChildren<Text>();
+        InitGameController();
+    }
+
+    public void InitGameController()
+    {
+        /*初始化通用变量*/
+        array = new int[7];
+        for (int i = 0; i < scoreText.Length; i++)
+        {
+            if (i == 0)
+                scoreText[0].text = LIFE_LENGTH.ToString();
+            else
+                scoreText[i].text = "0";
+        }
+
+        /*清除GameController下的所有子物体*/
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+            //Debug.Log("Destroy:" + transform.GetChild(i).gameObject.name);
+        }
 
         /* 初始化游戏，生成宝石 */
         gemstoneList = new ArrayList();
+        gemstoneList.Clear();
         matchesGemstone = new ArrayList();
+        matchesGemstone.Clear();
         for (int rowIndex = 0; rowIndex < rowNum; rowIndex++)
         {
             ArrayList temp = new ArrayList();
@@ -56,18 +80,33 @@ public class GameController : MonoBehaviour
     // Update is called once per frame  
     internal void Update()
     {
+        if(GameManager.newStart)
+        {
+            InitGameController();
+            GameManager.newStart = false;
+        }
         int count = 0;
+        if (array[0] >= LIFE_LENGTH)
+            gameObject.GetComponent<GameManager>().MakeGameOver();
+
         for (int i = 0; i < 7; i++)
         {
-            if (i == 2)
+            if (i == 0)
                 continue;
             else if (array[i] >= 6)
                 count++;
         }
-        if (count >= 5)
+        if (GameManager.level==0 && count >= 5 && GameManager.success == false)
         {
-            gameObject.GetComponent<GameManager>().MakeGameOver(); ;
             txt_over.text = "下一关";
+            GameManager.success = true;
+            //应该显示通关提示
+        }
+        else if(GameManager.level == 1 && GameManager.score> 500 && GameManager.success == false)
+        {
+            txt_over.text = "下一关";
+            GameManager.success = true;
+            //应该显示通关提示
         }
     }
 
@@ -240,7 +279,7 @@ public class GameController : MonoBehaviour
             ++array[type];
             if (type == 0)
             {
-                scoreText[0].text = (12 - array[0]).ToString();
+                scoreText[0].text = (LIFE_LENGTH - array[0]).ToString();
             }
             else
             {
