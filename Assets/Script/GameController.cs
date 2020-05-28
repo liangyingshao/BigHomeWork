@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
 public class GameController : MonoBehaviour
 {
-    public const int LIFE_LENGTH=6;
+    public const int LIFE_LENGTH = 6;
     public AnimationClip clear;//清除动画
     public Gemstone gemstone;
     public int rowNum = 7; //宝石列数  
@@ -21,9 +25,21 @@ public class GameController : MonoBehaviour
 
     internal void Start()
     {
+        Archive archive = Archive.GetInstance();
         scoreText = GameObject.Find("txt_score_detail").GetComponentsInChildren<Text>();
-        InitGameController();
+        if (archive.HasArchive)
+        {
+            LoadGameController(archive.Load());
+        }
+        else InitGameController();
     }
+
+    public void SaveGame()
+    {
+        Archive archive = Archive.GetInstance();
+        archive.Save();
+    }
+
 
     public void InitGameController()
     {
@@ -46,9 +62,9 @@ public class GameController : MonoBehaviour
 
         /* 初始化游戏，生成宝石 */
         gemstoneList = new ArrayList();
-        gemstoneList.Clear();
+        //gemstoneList.Clear();
         matchesGemstone = new ArrayList();
-        matchesGemstone.Clear();
+        //matchesGemstone.Clear();
         for (int rowIndex = 0; rowIndex < rowNum; rowIndex++)
         {
             ArrayList temp = new ArrayList();
@@ -62,6 +78,43 @@ public class GameController : MonoBehaviour
         // 开始检测匹配消除 
         if (CheckHorizontalMatches() || CheckVerticalMatches()) RemoveMatches();
     }
+
+    public void LoadGameController(JObject jObject)
+    {
+        /*初始化通用变量*/
+        array = new int[7];
+        for (int i = 0; i < scoreText.Length; i++)
+        {
+            if (i == 0)
+                scoreText[0].text = LIFE_LENGTH.ToString();
+            else
+                scoreText[i].text = "0";
+        }
+
+
+        //JToken token = jObject.SelectToken("positionList");
+        JArray positonList = JArray.FromObject(jObject["positionList"]);
+        gemstoneList = new ArrayList();
+        matchesGemstone = new ArrayList();
+        for (int rowIndex = 0; rowIndex < rowNum; rowIndex++)
+        {
+            ArrayList temp = new ArrayList();
+            gemstoneList.Add(temp);
+        }
+        foreach(JToken k in positonList)
+        {
+            int rowIndex = k.Value<int>("rowIndex");
+            int columIndex = k.Value<int>("columIndex");
+            int type = k.Value<int>("gemstoneType");
+            //Gemstone c = AddGemstone(rowIndex, columIndex);
+            ArrayList x = (ArrayList)gemstoneList[rowIndex];
+            x.Insert(columIndex, AddGemstone(rowIndex, columIndex, type));
+        }
+
+        // 开始检测匹配消除 
+        if (CheckHorizontalMatches() || CheckVerticalMatches()) RemoveMatches();
+    }
+
 
     /// <summary>
     /// 生成宝石
@@ -77,10 +130,18 @@ public class GameController : MonoBehaviour
         return stone;
     }
 
+    public Gemstone AddGemstone(int rowIndex, int columIndex, int type)
+    {
+        Gemstone stone = Instantiate(gemstone, transform) as Gemstone;// 生成宝石作为GameController子物体
+        stone.GetComponent<Gemstone>().CreateGemstoneBg(type);
+        stone.GetComponent<Gemstone>().UpdatePosiImmi(rowIndex, columIndex);
+        return stone;
+    }
+
     // Update is called once per frame  
     internal void Update()
     {
-        if(GameManager.newStart)
+        if (GameManager.newStart)
         {
             InitGameController();
             GameManager.newStart = false;
@@ -96,13 +157,13 @@ public class GameController : MonoBehaviour
             else if (array[i] >= 6)
                 count++;
         }
-        if (GameManager.level==0 && count >= 5 && GameManager.success == false)
+        if (GameManager.level == 0 && count >= 5 && GameManager.success == false)
         {
             txt_over.text = "下一关";
             GameManager.success = true;
             //应该显示通关提示
         }
-        else if(GameManager.level == 1 && GameManager.score> 500 && GameManager.success == false)
+        else if (GameManager.level == 1 && GameManager.score > 500 && GameManager.success == false)
         {
             txt_over.text = "下一关";
             GameManager.success = true;
@@ -285,7 +346,7 @@ public class GameController : MonoBehaviour
             {
                 scoreText[type].text = array[type].ToString();
             }
-            
+
             RemoveGemstone(c);
             //每删除一个宝石加10分
             GameManager.score += 10;

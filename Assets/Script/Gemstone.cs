@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
+[Serializable]
 public class Gemstone : MonoBehaviour
 {
     public float xOffset; //x方向的偏移  
@@ -8,7 +10,7 @@ public class Gemstone : MonoBehaviour
     public int rowIndex = 0;
     public int columIndex = 0;
     public GameObject[] gemstoneBgs; //宝石预制体数组  
-    public int gemstoneType; //宝石类型  
+    public int gemstoneType; //宝石类型
     private GameObject gemstoneBg;
     private GameController gameController;
     //private SpriteRenderer spriteRenderer;
@@ -50,7 +52,14 @@ public class Gemstone : MonoBehaviour
     public void RandomCreateGemstoneBg()
     { 
         if (gemstoneBg != null)return;
-        gemstoneType = Random.Range(0, gemstoneBgs.Length);
+        gemstoneType = UnityEngine.Random.Range(0, gemstoneBgs.Length);
+        gemstoneBg = Instantiate(gemstoneBgs[gemstoneType], transform) as GameObject;
+    }
+
+    public void CreateGemstoneBg(int gemstoneType)
+    {
+        if (gemstoneBg != null) return;
+        this.gemstoneType = gemstoneType;
         gemstoneBg = Instantiate(gemstoneBgs[gemstoneType], transform) as GameObject;
     }
 

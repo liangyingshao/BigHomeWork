@@ -8,7 +8,10 @@ public class Load : MonoBehaviour
 {
     public Slider mySlider;
     private int slideValue = 0;
-
+    private void Awake()
+    {
+        Archive.GetInstance();
+    }
     void FixedUpdate()
     {
         if (slideValue < 100)

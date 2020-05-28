@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Scene1");
     }
     
-    public void buttonOverFunc()
+    public void ButtonOverFunc()
     {
         if (success)
         {
