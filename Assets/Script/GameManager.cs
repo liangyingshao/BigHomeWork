@@ -26,10 +26,9 @@ public class GameManager : MonoBehaviour
         gameTime = 60;
         score = 0;
         success = false;
-        //newStart = false;
-        score = 0;
         currentScore = 0;
         addScoreTime = 0;
+        playerScore.text = "0";
     }
 
     // Start is called before the first frame update
@@ -61,10 +60,10 @@ public class GameManager : MonoBehaviour
         {
             level++;
         }
-        newStart = true;
-        initGameManager();
-        //System.Threading.Thread.Sleep(1000);
-        panel.SetActive(false);
+        //gameObject.GetComponent<GameController>().InitGameController();
+        //initGameManager();
+        //panel.SetActive(false);
+        SceneManager.LoadScene("Scene1");
     }
 
     public void ChangeGameSpeed(float targetSpeed)
@@ -82,6 +81,10 @@ public class GameManager : MonoBehaviour
                     txt_tip.text = "level 1\n生存是文明的第一要义：收集五个不同星球的图标各6个，每消去一个地球生命值减一，生命值为零则游戏失败。";break;
                 case 1:
                     txt_tip.text = "level 2\n黑暗森林法则：在60秒内消尽可能多的星球，分数达到500即可通关，每消去一个地球生命值减一，生命值为零则游戏失败。"; break;
+                case 2:
+                    txt_tip.text = "收集10个太阳周围的能量站";break;
+                case 3:
+                    txt_tip.text = "消除10个质子探测器，不允许消除能量站";break;
                 default:
                     break;
             }
