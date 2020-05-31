@@ -26,6 +26,8 @@ public class GameController : MonoBehaviour
     private Text[] scoreText;
     public Button btn_next;
     public AnimationClip next;
+    public AudioClip clearAudio;
+    public AudioClip successAudio;
 
     internal void Start()
     {
@@ -163,6 +165,7 @@ public class GameController : MonoBehaviour
             txt_over.text = "下一关";
             GameManager.success = true;
             //应该显示通关提示：声音加按钮
+            AudioSource.PlayClipAtPoint(successAudio, transform.position);
             btn_next.interactable = true;
             Animator animator = btn_next.GetComponent<Animator>();
             if (animator != null)
@@ -176,6 +179,7 @@ public class GameController : MonoBehaviour
             txt_over.text = "下一关";
             GameManager.success = true;
             //应该显示通关提示：声音加按钮
+            AudioSource.PlayClipAtPoint(successAudio, transform.position);
             btn_next.interactable = true;
             Animator animator = btn_next.GetComponent<Animator>();
             if (animator != null)
@@ -189,6 +193,7 @@ public class GameController : MonoBehaviour
             txt_over.text = "下一关";
             GameManager.success = true;
             //应该显示通关提示：声音加按钮
+            AudioSource.PlayClipAtPoint(successAudio, transform.position);
             btn_next.interactable = true;
             Animator animator = btn_next.GetComponent<Animator>();
             if (animator != null)
@@ -202,6 +207,7 @@ public class GameController : MonoBehaviour
             txt_over.text = "下一关";
             GameManager.success = true;
             //应该显示通关提示：声音加按钮
+            AudioSource.PlayClipAtPoint(successAudio, transform.position);
             btn_next.interactable = true;
             Animator animator = btn_next.GetComponent<Animator>();
             if (animator != null)
@@ -329,6 +335,7 @@ public class GameController : MonoBehaviour
         {
             Gemstone c = matchesGemstone[i] as Gemstone;
             //调用清除动画以及清除宝石
+            AudioSource.PlayClipAtPoint(clearAudio, transform.position);
             StartCoroutine(ClearWithAnimation(c));
         }
         matchesGemstone = new ArrayList();
