@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public const int LIFE_LENGTH = 6;
+    public const int STATION_NUM = 3;
+    public const int DETECTOR_NUM = 3;
     public AnimationClip clear;//清除动画
     public Gemstone gemstone;
     public int rowNum = 7; //宝石列数  
@@ -22,6 +24,8 @@ public class GameController : MonoBehaviour
     int[] array;
     public Text txt_over;
     private Text[] scoreText;
+    public Button btn_next;
+    public AnimationClip next;
 
     internal void Start()
     {
@@ -44,7 +48,7 @@ public class GameController : MonoBehaviour
     public void InitGameController()
     {
         /*初始化通用变量*/
-        array = new int[7];
+        array = new int[10];
         for (int i = 0; i < scoreText.Length; i++)
         {
             if (i == 0)
@@ -52,6 +56,7 @@ public class GameController : MonoBehaviour
             else
                 scoreText[i].text = "0";
         }
+        btn_next.interactable = false;
 
         /*清除GameController下的所有子物体*/
         for (int i = 0; i < transform.childCount; i++)
@@ -90,7 +95,6 @@ public class GameController : MonoBehaviour
             else
                 scoreText[i].text = "0";
         }
-
 
         //JToken token = jObject.SelectToken("positionList");
         JArray positonList = JArray.FromObject(jObject["positionList"]);
@@ -141,16 +145,13 @@ public class GameController : MonoBehaviour
     // Update is called once per frame  
     internal void Update()
     {
-        if (GameManager.newStart)
-        {
-            InitGameController();
-            GameManager.newStart = false;
-        }
         int count = 0;
         if (array[0] >= LIFE_LENGTH)
             gameObject.GetComponent<GameManager>().MakeGameOver();
+        if(GameManager.level == 3 && array[9]>0)
+            gameObject.GetComponent<GameManager>().MakeGameOver();
 
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < array.Length; i++)
         {
             if (i == 0)
                 continue;
@@ -161,13 +162,54 @@ public class GameController : MonoBehaviour
         {
             txt_over.text = "下一关";
             GameManager.success = true;
-            //应该显示通关提示
+            //应该显示通关提示：声音加按钮
+            btn_next.interactable = true;
+            Animator animator = btn_next.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.Play(next.name);
+                animator.speed = 1;
+            }
         }
         else if (GameManager.level == 1 && GameManager.score > 500 && GameManager.success == false)
         {
             txt_over.text = "下一关";
             GameManager.success = true;
-            //应该显示通关提示
+            //应该显示通关提示：声音加按钮
+            btn_next.interactable = true;
+            Animator animator = btn_next.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.Play(next.name);
+                animator.speed = 1;
+            }
+        }
+        else if(GameManager.level == 2 && array[9] >= STATION_NUM && GameManager.success == false)
+        {
+            txt_over.text = "下一关";
+            GameManager.success = true;
+            //应该显示通关提示：声音加按钮
+            btn_next.interactable = true;
+            Animator animator = btn_next.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.Play(next.name);
+                animator.speed = 1;
+            }
+        }
+        else if (GameManager.level == 3 && array[8] >= DETECTOR_NUM && GameManager.success == false)
+        {
+            txt_over.text = "下一关";
+            GameManager.success = true;
+            //应该显示通关提示：声音加按钮
+            btn_next.interactable = true;
+            Animator animator = btn_next.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.Play(next.name);
+                animator.speed = 1;
+            }
+            //应该显示最终通关动画
         }
     }
 

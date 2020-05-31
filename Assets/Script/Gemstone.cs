@@ -52,7 +52,11 @@ public class Gemstone : MonoBehaviour
     public void RandomCreateGemstoneBg()
     { 
         if (gemstoneBg != null)return;
-        gemstoneType = UnityEngine.Random.Range(0, gemstoneBgs.Length);
+        //level 2:length,否则7
+        if (GameManager.level > 1)
+            gemstoneType = UnityEngine.Random.Range(0, gemstoneBgs.Length);
+        else
+            gemstoneType = UnityEngine.Random.Range(0, 7);
         gemstoneBg = Instantiate(gemstoneBgs[gemstoneType], transform) as GameObject;
     }
 
