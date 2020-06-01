@@ -28,6 +28,11 @@ public class Archive
         return archive;
     }
 
+    public void Del(string archiveName = @"\default.arc")
+    {
+        File.Delete(Application.persistentDataPath + archiveName);
+    }
+
     public void Save(string archiveName = @"\default.arc")
     {
         JObject jsonObj = new JObject();
@@ -44,9 +49,16 @@ public class Archive
                 positonArr.Add(o);
             }
         }
+        JArray scoreTextArr= new JArray();
+        foreach (UnityEngine.UI.Text i in gameController.scoreText)
+        {
+            scoreTextArr.Add(i.text);
+        }
         jsonObj.Add("positionList", positonArr);
+        jsonObj.Add("scoreTextArr", scoreTextArr);
         jsonObj.Add("timeText", gameManager.timeText.text);
         jsonObj.Add("playerScore", gameManager.playerScore.text);
+        
         File.WriteAllText(Application.persistentDataPath + archiveName, jsonObj.ToString());
     }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +24,7 @@ public class GameController : MonoBehaviour
     public AudioClip errorClip;
     int[] array;
     public Text txt_over;
-    private Text[] scoreText;
+    public Text[] scoreText;
     public Button btn_next;
     public AnimationClip next;
 
@@ -44,6 +45,11 @@ public class GameController : MonoBehaviour
         archive.Save();
     }
 
+    public void DelArchive()
+    {
+        Archive archive = Archive.GetInstance();
+        archive.Del();
+    }
 
     public void InitGameController()
     {
@@ -86,14 +92,15 @@ public class GameController : MonoBehaviour
 
     public void LoadGameController(JObject jObject)
     {
+        JArray scoreTextArr = JArray.FromObject(jObject["scoreTextArr"]);
         /*初始化通用变量*/
-        array = new int[7];
+        array = new int[10];
         for (int i = 0; i < scoreText.Length; i++)
         {
             if (i == 0)
-                scoreText[0].text = LIFE_LENGTH.ToString();
+                scoreText[0].text = (LIFE_LENGTH - int.Parse(scoreTextArr[i].ToString())).ToString();
             else
-                scoreText[i].text = "0";
+                scoreText[i].text = scoreTextArr[i].ToString();
         }
 
         //JToken token = jObject.SelectToken("positionList");
@@ -114,7 +121,9 @@ public class GameController : MonoBehaviour
             ArrayList x = (ArrayList)gemstoneList[rowIndex];
             x.Insert(columIndex, AddGemstone(rowIndex, columIndex, type));
         }
-
+        GameManager gameManager = (GameManager)GameObject.Find("GameController").GetComponent("GameManager");
+        gameManager.gameTime = jObject.Value<float>("timeText");
+        gameManager.currentScore = jObject.Value<int>("playerScore");
         // 开始检测匹配消除 
         if (CheckHorizontalMatches() || CheckVerticalMatches()) RemoveMatches();
     }

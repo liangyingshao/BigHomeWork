@@ -8,11 +8,11 @@ public class GameManager : MonoBehaviour
 {
     //UI显示的内容
     public Text timeText;
-    private float gameTime;
+    public float gameTime;
     public static bool success;
     public static bool newStart = false;
     public static int score;
-    private int currentScore;
+    public int currentScore;
     private float addScoreTime;
     public Text playerScore;
     public Button btn_back;
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public GameObject img_tip;
     static public int level = 0;
 
-    void initGameManager()
+    void Awake()
     {
         gameTime = 60;
         score = 0;
@@ -35,7 +35,6 @@ public class GameManager : MonoBehaviour
     internal void Start()
     {
         panel.SetActive(false);
-        initGameManager();
     }
 
     /// <summary>
@@ -121,9 +120,14 @@ public class GameManager : MonoBehaviour
         {
             if (currentScore < score)
             {
-                currentScore+=10;
+                currentScore += 10;
                 playerScore.text = currentScore.ToString();
                 addScoreTime = 0;
+            }
+            else
+            {
+                score = currentScore;
+                playerScore.text = score.ToString();
             }
         }
     }
