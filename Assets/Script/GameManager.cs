@@ -19,7 +19,9 @@ public class GameManager : MonoBehaviour
     public GameObject panel;
     public Text txt_tip;
     public GameObject img_tip;
-    static public int level = 0;
+    static public int level = 2;
+    public AudioClip nextAudio;
+    public AudioClip timeAudio;
 
     void Awake()
     {
@@ -52,6 +54,11 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("Scene1");
     }
+    public IEnumerator ReStartGame2()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("Scene1");
+    }
     
     public void ButtonOverFunc()
     {
@@ -62,7 +69,8 @@ public class GameManager : MonoBehaviour
         //gameObject.GetComponent<GameController>().InitGameController();
         //initGameManager();
         //panel.SetActive(false);
-        SceneManager.LoadScene("Scene1");
+        AudioSource.PlayClipAtPoint(nextAudio, transform.position);
+        StartCoroutine(ReStartGame2());
     }
 
     public void ChangeGameSpeed(float targetSpeed)
@@ -81,9 +89,9 @@ public class GameManager : MonoBehaviour
                 case 1:
                     txt_tip.text = "level 2\n黑暗森林法则：在60秒内消尽可能多的星球，分数达到500即可通关，每消去一个地球生命值减一，生命值为零则游戏失败。"; break;
                 case 2:
-                    txt_tip.text = "收集10个太阳周围的能量站";break;
+                    txt_tip.text = "level 3\n收集10个太阳周围的能量站"; break;
                 case 3:
-                    txt_tip.text = "消除10个质子探测器，不允许消除能量站";break;
+                    txt_tip.text = "level 4\n消除10个质子探测器，不允许消除能量站"; break;
                 default:
                     break;
             }
@@ -111,7 +119,13 @@ public class GameManager : MonoBehaviour
             MakeGameOver();
             return;
         }
+        int count = 10;
         timeText.text = gameTime.ToString("0");
+        if((int)(gameTime) - count ==0)
+        {
+            count--;
+            AudioSource.PlayClipAtPoint(timeAudio, transform.position);
+        }
         if (addScoreTime <= 0.05)
         {
             addScoreTime += Time.deltaTime;
