@@ -78,4 +78,12 @@ public class Gemstone : MonoBehaviour
         Destroy(gameObject);
         Destroy(gemstoneBg.gameObject);
     }
+
+    //public IEnumerator DisposeWithDelay(float second)
+    //{
+    //    yield return new WaitForSeconds(second);
+    //    gameController = null;
+    //    Destroy(gameObject);
+    //    Destroy(gemstoneBg.gameObject);
+    //}
 }

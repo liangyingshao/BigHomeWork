@@ -370,6 +370,7 @@ public class GameController : MonoBehaviour
     /// <param name="c">要删除的宝石</param>
     void RemoveGemstone(Gemstone c)
     {
+        if (c == null) return;
         c.Dispose();
         gameObject.GetComponent<AudioSource>().PlayOneShot(match3Clip);
         for (int i = c.rowIndex + 1; i < rowNum; i++)
