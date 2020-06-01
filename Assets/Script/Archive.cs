@@ -13,6 +13,11 @@ public class Archive
     {
         get;
     }
+    public bool HasRead
+    {
+        get;
+        set;
+    } = false;
 
     private Archive()
     {
@@ -65,6 +70,7 @@ public class Archive
     public JObject Load()
     {
         string json = File.ReadAllText(Application.persistentDataPath + @"\default.arc");
+        HasRead = true;
         return JObject.Parse(json);
     }
 

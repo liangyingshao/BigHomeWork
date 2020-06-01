@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour
     {
         Archive archive = Archive.GetInstance();
         scoreText = GameObject.Find("txt_score_detail").GetComponentsInChildren<Text>();
-        if (archive.HasArchive)
+        if (archive.HasArchive && !archive.HasRead)
         {
             LoadGameController(archive.Load());
         }
