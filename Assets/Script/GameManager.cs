@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     //UI显示的内容
     public Text timeText;
-    public float gameTime;
+    static public float gameTime;
     public static bool success;
     public static bool newStart = false;
     public static int score;
@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Text playerScore;
     public Button btn_back;
     public GameObject panel;
+    public Text txt_over;
     public Text txt_tip;
     public GameObject img_tip;
     static public int level = 2;
@@ -56,19 +57,18 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator ReStartGame2()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.4f);
+        if (success)
+        {
+            level++;
+        }
         SceneManager.LoadScene("Scene1");
     }
     
     public void ButtonOverFunc()
     {
-        if (success)
-        {
-            level++;
-        }
         //gameObject.GetComponent<GameController>().InitGameController();
         //initGameManager();
-        //panel.SetActive(false);
         AudioSource.PlayClipAtPoint(nextAudio, transform.position);
         StartCoroutine(ReStartGame2());
     }
@@ -85,13 +85,13 @@ public class GameManager : MonoBehaviour
             switch(level)
             {
                 case 0:
-                    txt_tip.text = "level 1\n生存是文明的第一要义：收集五个不同星球的图标各6个，每消去一个地球生命值减一，生命值为零则游戏失败。";break;
+                    txt_tip.text = "level 1\n收集五个不同星球的图标各6个，每消去一个地球生命值减一，生命值为零则游戏失败。";break;
                 case 1:
-                    txt_tip.text = "level 2\n黑暗森林法则：在60秒内消尽可能多的星球，分数达到500即可通关，每消去一个地球生命值减一，生命值为零则游戏失败。"; break;
+                    txt_tip.text = "level 2\n在60秒内消尽可能多的星球，分数达到500即可通关，每消去一个地球生命值减一，生命值为零则游戏失败。"; break;
                 case 2:
-                    txt_tip.text = "level 3\n收集10个太阳周围的能量站"; break;
+                    txt_tip.text = "level 3\n收集6个太阳周围的能量站"; break;
                 case 3:
-                    txt_tip.text = "level 4\n消除10个质子探测器，不允许消除能量站"; break;
+                    txt_tip.text = "level 4\n60s内不允许消除能量站"; break;
                 default:
                     break;
             }
@@ -148,6 +148,27 @@ public class GameManager : MonoBehaviour
 
     public void MakeGameOver()
     {
+        gameObject.GetComponent<GameController>().Update();
+        if (success)
+        {
+            switch(level)
+            {
+                case 0:
+                    txt_over.text = "生存是文明的第一要义";break;
+                case 1:
+                    txt_over.text = "“当一个文明发现了另一个文明，但是不清楚这个文明的状况和态度，最安全的方式就是毁掉这个文明。”" +
+                        "—黑暗森林法则。";break;
+                case 2:
+                    txt_over.text = "在这一期间人们的应用科技有了飞跃的发展，同时面壁者雷迪亚兹在太阳系周围建立了大量的能量站，" +
+                        "等待质子穿过的时候引爆能量站形成大片雾面获得质子的位置，为人们的逃亡留有时间准备。";break;
+                case 3:
+                    txt_over.text = "应该播放动画";break;
+            }
+        }
+        else
+        {
+            txt_over.text = "继续加油吧";
+        }
         panel.SetActive(true);
     }
 }

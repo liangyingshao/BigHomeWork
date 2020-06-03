@@ -124,7 +124,7 @@ public class GameController : MonoBehaviour
             x.Insert(columIndex, AddGemstone(rowIndex, columIndex, type));
         }
         GameManager gameManager = (GameManager)GameObject.Find("GameController").GetComponent("GameManager");
-        gameManager.gameTime = jObject.Value<float>("timeText");
+        GameManager.gameTime = jObject.Value<float>("timeText");
         gameManager.currentScore = jObject.Value<int>("playerScore");
         // 开始检测匹配消除 
         if (CheckHorizontalMatches() || CheckVerticalMatches()) RemoveMatches();
@@ -158,9 +158,13 @@ public class GameController : MonoBehaviour
     {
         int count = 0;
         if (array[0] >= LIFE_LENGTH)
+        {
             gameObject.GetComponent<GameManager>().MakeGameOver();
-        if(GameManager.level == 3 && array[9]>0)
-            gameObject.GetComponent<GameManager>().MakeGameOver();
+        }
+        //if (GameManager.level == 3 && array[9]>0)
+        //{
+        //    gameObject.GetComponent<GameManager>().MakeGameOver();
+        //}
 
         for (int i = 0; i < array.Length; i++)
         {
@@ -211,9 +215,10 @@ public class GameController : MonoBehaviour
                 animator.speed = 1;
             }
         }
-        else if (GameManager.level == 3 && array[8] >= DETECTOR_NUM && GameManager.success == false)
+        else if (GameManager.level == 3 && GameManager.gameTime==0 && array[9] == 0 && GameManager.success == false)
         {
-            txt_over.text = "下一关";
+            txt_over.text = "通关成功";
+            //应该播放动画
             GameManager.success = true;
             //应该显示通关提示：声音加按钮
             AudioSource.PlayClipAtPoint(successAudio, transform.position);
