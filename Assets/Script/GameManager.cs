@@ -8,6 +8,8 @@ using UnityEngine.Video;
 public class GameManager : MonoBehaviour
 {
     //UI显示的内容
+    public Image picture1;
+    public Image picture2;
     public Text timeText;
     static public float gameTime;
     public static bool success;
@@ -21,13 +23,13 @@ public class GameManager : MonoBehaviour
     public Text txt_over;
     public Text txt_tip;
     public GameObject img_tip;
-    static public int level = 0;
+    static public int level;
     public AudioClip nextAudio;
     public AudioClip timeAudio;
     static private VideoPlayer videoPlayer;
     void Awake()
     {
-        if(newStart)
+        if (newStart && level == 0)
         {
             videoPlayer = gameObject.AddComponent<VideoPlayer>();
             videoPlayer.prepareCompleted += HideUI;
@@ -43,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     private void ShowUI(VideoPlayer source)
     {
+        StopAllCoroutines();
         source.Stop();
         Destroy(videoPlayer);
         Canvas canvas = FindObjectOfType<Canvas>();
@@ -72,6 +75,16 @@ public class GameManager : MonoBehaviour
             videoPlayer.Play();
             newStart = false;
         }
+        if (level > 1)
+        {
+            picture1.enabled = false;
+            picture2.enabled = true;
+        }
+        else
+        {
+            picture2.enabled = false;
+            picture1.enabled = true;
+        }
     }
 
     /// <summary>
@@ -100,7 +113,7 @@ public class GameManager : MonoBehaviour
             {
                 videoPlayer = gameObject.AddComponent<VideoPlayer>();
                 videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
-                videoPlayer.url = "Assets/Video/2020.06.03-19.35.mp4";
+                videoPlayer.url = "Assets/Video/2020.06.03-19.49.mp4";
                 videoPlayer.Prepare();
                 videoPlayer.targetCamera = FindObjectOfType<Camera>();
                 videoPlayer.prepareCompleted += HideUI;
@@ -112,7 +125,7 @@ public class GameManager : MonoBehaviour
             {
                 videoPlayer = gameObject.AddComponent<VideoPlayer>();
                 videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
-                videoPlayer.url = "Assets/Video/2020.06.03-19.49.mp4";
+                videoPlayer.url = "Assets/Video/2020.06.03-19.35.mp4";
                 videoPlayer.Prepare();
                 videoPlayer.targetCamera = FindObjectOfType<Camera>();
                 videoPlayer.prepareCompleted += HideUI;
