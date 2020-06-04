@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public Text timeText;
     static public float gameTime;
     public static bool success;
-    public static bool newStart = false;
+    public static bool newStart = true;
     public static int score;
     public int currentScore;
     private float addScoreTime;
@@ -24,12 +24,15 @@ public class GameManager : MonoBehaviour
     static public int level = 0;
     public AudioClip nextAudio;
     public AudioClip timeAudio;
-    VideoPlayer videoPlayer;
+    static private VideoPlayer videoPlayer;
     void Awake()
     {
-        videoPlayer = gameObject.AddComponent<VideoPlayer>();
-        videoPlayer.prepareCompleted += HideUI;
-        videoPlayer.loopPointReached += ShowUI;
+        if(newStart)
+        {
+            videoPlayer = gameObject.AddComponent<VideoPlayer>();
+            videoPlayer.prepareCompleted += HideUI;
+            videoPlayer.loopPointReached += ShowUI;
+        }
         gameTime = 60;
         score = 0;
         success = false;
@@ -45,6 +48,7 @@ public class GameManager : MonoBehaviour
         Canvas canvas = FindObjectOfType<Canvas>();
         canvas.enabled = true;
         ChangeGameSpeed(1);
+        ReStartGame();
     }
 
     private void HideUI(VideoPlayer source)
@@ -59,13 +63,14 @@ public class GameManager : MonoBehaviour
     internal void Start()
     {
         panel.SetActive(false);
-        if (level == 0)
+        if (level == 0 && newStart == true)
         {
             videoPlayer.url = "Assets/Video/2020.04.30-16.29.mp4";
             videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
             videoPlayer.Prepare();
             videoPlayer.targetCamera = FindObjectOfType<Camera>();
             videoPlayer.Play();
+            newStart = false;
         }
     }
 
@@ -82,6 +87,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ReStartGame()
     {
+        StopAllCoroutines();
         SceneManager.LoadScene("Scene1");
     }
     public IEnumerator ReStartGame2()
@@ -90,8 +96,32 @@ public class GameManager : MonoBehaviour
         if (success)
         {
             level++;
+            if (level == 2)
+            {
+                videoPlayer = gameObject.AddComponent<VideoPlayer>();
+                videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
+                videoPlayer.url = "Assets/Video/2020.06.03-19.35.mp4";
+                videoPlayer.Prepare();
+                videoPlayer.targetCamera = FindObjectOfType<Camera>();
+                videoPlayer.prepareCompleted += HideUI;
+                videoPlayer.loopPointReached += ShowUI;
+                videoPlayer.Play();
+                yield return new WaitForSeconds((float)videoPlayer.clip.length);
+            }
+            else if (level == 3)
+            {
+                videoPlayer = gameObject.AddComponent<VideoPlayer>();
+                videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
+                videoPlayer.url = "Assets/Video/2020.06.03-19.49.mp4";
+                videoPlayer.Prepare();
+                videoPlayer.targetCamera = FindObjectOfType<Camera>();
+                videoPlayer.prepareCompleted += HideUI;
+                videoPlayer.loopPointReached += ShowUI;
+                videoPlayer.Play();
+                yield return new WaitForSeconds((float)videoPlayer.clip.length);
+            }
         }
-        SceneManager.LoadScene("Scene1");
+        ReStartGame();
     }
     
     public void ButtonOverFunc()
@@ -140,6 +170,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && videoPlayer != null)
         {
             ShowUI(videoPlayer);
+            videoPlayer = null;
         }
         if (panel.activeSelf)
         {
@@ -187,38 +218,6 @@ public class GameManager : MonoBehaviour
     {
         if (success)
         {
-            if (level == 0)
-            {
-
-            }
-            else if (level == 1)
-            {
-                txt_over.text = "“当一个文明发现了另一个文明，但是不清楚这个文明的状况和态度，最安全的方式就是毁掉这个文明。”" +
-                        "—黑暗森林法则。";
-                
-            }
-            else if (level == 2)
-            {
-                videoPlayer = gameObject.AddComponent<VideoPlayer>();
-                videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
-                videoPlayer.url = "Assets/Video/2020.06.03-19.35.mp4";
-                videoPlayer.Prepare();
-                videoPlayer.targetCamera = FindObjectOfType<Camera>();
-                videoPlayer.prepareCompleted += HideUI;
-                videoPlayer.loopPointReached += ShowUI;
-                videoPlayer.Play();
-            }
-            else if (level == 3)
-            {
-                videoPlayer = gameObject.AddComponent<VideoPlayer>();
-                videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
-                videoPlayer.url = "Assets/Video/2020.06.03-19.49.mp4";
-                videoPlayer.Prepare();
-                videoPlayer.targetCamera = FindObjectOfType<Camera>();
-                videoPlayer.prepareCompleted += HideUI;
-                videoPlayer.loopPointReached += ShowUI;
-                videoPlayer.Play();
-            }
             switch(level)
             {
                 case 0:
