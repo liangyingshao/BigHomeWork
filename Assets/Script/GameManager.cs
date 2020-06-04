@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,12 +21,15 @@ public class GameManager : MonoBehaviour
     public Text txt_over;
     public Text txt_tip;
     public GameObject img_tip;
-    static public int level = 2;
+    static public int level = 0;
     public AudioClip nextAudio;
     public AudioClip timeAudio;
-
+    VideoPlayer videoPlayer;
     void Awake()
     {
+        videoPlayer = gameObject.AddComponent<VideoPlayer>();
+        videoPlayer.prepareCompleted += HideUI;
+        videoPlayer.loopPointReached += ShowUI;
         gameTime = 60;
         score = 0;
         success = false;
@@ -34,10 +38,35 @@ public class GameManager : MonoBehaviour
         playerScore.text = "0";
     }
 
+    private void ShowUI(VideoPlayer source)
+    {
+        source.Stop();
+        Destroy(videoPlayer);
+        Canvas canvas = FindObjectOfType<Canvas>();
+        canvas.enabled = true;
+        ChangeGameSpeed(1);
+    }
+
+    private void HideUI(VideoPlayer source)
+    {
+        Canvas canvas = FindObjectOfType<Canvas>();
+        canvas.enabled = false;
+        ChangeGameSpeed(0);
+        
+    }
+
     // Start is called before the first frame update
     internal void Start()
     {
         panel.SetActive(false);
+        if (level == 0)
+        {
+            videoPlayer.url = "Assets/Video/2020.04.30-16.29.mp4";
+            videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
+            videoPlayer.Prepare();
+            videoPlayer.targetCamera = FindObjectOfType<Camera>();
+            videoPlayer.Play();
+        }
     }
 
     /// <summary>
@@ -108,6 +137,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     internal void Update()
     {
+        if (Input.GetMouseButtonDown(0) && videoPlayer != null)
+        {
+            ShowUI(videoPlayer);
+        }
         if (panel.activeSelf)
         {
             return;
@@ -154,6 +187,38 @@ public class GameManager : MonoBehaviour
     {
         if (success)
         {
+            if (level == 0)
+            {
+
+            }
+            else if (level == 1)
+            {
+                txt_over.text = "“当一个文明发现了另一个文明，但是不清楚这个文明的状况和态度，最安全的方式就是毁掉这个文明。”" +
+                        "—黑暗森林法则。";
+                
+            }
+            else if (level == 2)
+            {
+                videoPlayer = gameObject.AddComponent<VideoPlayer>();
+                videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
+                videoPlayer.url = "Assets/Video/2020.06.03-19.35.mp4";
+                videoPlayer.Prepare();
+                videoPlayer.targetCamera = FindObjectOfType<Camera>();
+                videoPlayer.prepareCompleted += HideUI;
+                videoPlayer.loopPointReached += ShowUI;
+                videoPlayer.Play();
+            }
+            else if (level == 3)
+            {
+                videoPlayer = gameObject.AddComponent<VideoPlayer>();
+                videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
+                videoPlayer.url = "Assets/Video/2020.06.03-19.49.mp4";
+                videoPlayer.Prepare();
+                videoPlayer.targetCamera = FindObjectOfType<Camera>();
+                videoPlayer.prepareCompleted += HideUI;
+                videoPlayer.loopPointReached += ShowUI;
+                videoPlayer.Play();
+            }
             switch(level)
             {
                 case 0:
