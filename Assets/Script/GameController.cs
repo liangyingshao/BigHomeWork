@@ -10,8 +10,8 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public const int LIFE_LENGTH = 6;
-    public const int STATION_NUM = 3;
-    public const int DETECTOR_NUM = 3;
+    public const int STATION_NUM = 6;
+    // public const int DETECTOR_NUM = 3;
     public AnimationClip clear;//清除动画
     public Gemstone gemstone;
     public int rowNum = 7; //宝石列数  
@@ -160,6 +160,7 @@ public class GameController : MonoBehaviour
         if (array[0] >= LIFE_LENGTH)
         {
             gameObject.GetComponent<GameManager>().MakeGameOver();
+            return;
         }
         //if (GameManager.level == 3 && array[9]>0)
         //{

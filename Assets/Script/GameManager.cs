@@ -149,6 +149,10 @@ public class GameManager : MonoBehaviour
         if(gameTime<=0)
         {
             gameTime = 0;
+            if (level == 3)
+            {
+                gameObject.GetComponent<GameController>().Update();
+            }
             MakeGameOver();
             return;
         }
@@ -181,7 +185,6 @@ public class GameManager : MonoBehaviour
 
     public void MakeGameOver()
     {
-        gameObject.GetComponent<GameController>().Update();
         if (success)
         {
             if (level == 0)
@@ -227,7 +230,7 @@ public class GameManager : MonoBehaviour
                     txt_over.text = "在这一期间人们的应用科技有了飞跃的发展，同时面壁者雷迪亚兹在太阳系周围建立了大量的能量站，" +
                         "等待质子穿过的时候引爆能量站形成大片雾面获得质子的位置，为人们的逃亡留有时间准备。";break;
                 case 3:
-                    txt_over.text = "应该播放动画";break;
+                    txt_over.text = "恭喜通关!";break;
             }
         }
         else
